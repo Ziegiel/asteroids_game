@@ -1,6 +1,7 @@
+import sys
 import pygame
 from constants import *
-from logger import log_state
+from logger import log_state, log_event
 from player import Player
 from circleshape import CircleShape
 from asteroid import Asteroid
@@ -31,10 +32,16 @@ def main():
                 return
             
         screen.fill("black")
-        updatable.update(dt)
-
         for sprite in drawable:
             sprite.draw(screen)
+
+        updatable.update(dt)
+
+        for asteroid in asteroids:
+            if player.add_colison(asteroid):
+                log_event("player_hit")
+                print("Game Over!")
+                sys.exit()
 
         pygame.display.flip()
         dt = clock.tick(60) / 1000
